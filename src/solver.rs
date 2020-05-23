@@ -55,6 +55,9 @@ pub fn get_common(inp:usize, inp_line: &[Block], fill_to_end:bool) -> Vec<Block>
             else if x3 == x + inp {
                 line.push(Block::Empty);
             }
+            else if fill_to_end && inp_line[x3] == Block::Full {
+                line.push(Block::Empty);
+            }
             else if fill_to_end {
                 line.push(Block::Empty);
             }
@@ -85,11 +88,23 @@ pub fn get_common(inp:usize, inp_line: &[Block], fill_to_end:bool) -> Vec<Block>
         }
     }
 
+    let common = get_common_in_vect(&all_lines);
+
+    println!("{:?}", all_lines);
+    println!("");
+    println!("Common: {:?}", common);
+
+    return common;
+}
+
+fn get_common_in_vect(all_lines: &Vec<Vec<Block>>) -> Vec<Block> {
+
     if all_lines.len() == 0 {
         return vec![];
     }
 
     let mut common: Vec<Block> = vec![];
+    let len = all_lines[0].len();
 
     for x in 0..len {
         let first = all_lines[0][x];
@@ -104,14 +119,42 @@ pub fn get_common(inp:usize, inp_line: &[Block], fill_to_end:bool) -> Vec<Block>
         common.push(block);
     }
 
-    println!("{:?}", all_lines);
-    println!("");
-    println!("Common: {:?}", common);
-
     return common;
 }
 
 
+pub fn solve_line(inp_vect:&[usize], inp_line: &[Block]) -> Vec<Block> {
+
+    let mut all_lines: Vec<Vec<Block>> = vec![];
+    all_lines.push(inp_line.to_vec());
+
+    for inp_ix in 0..all_lines.len() {
+
+        let mut new_lines: Vec<Vec<Block>> = vec![];
+        let is_last_inp = inp_ix == all_lines.len() -1;
+
+        for line in all_lines {
+            let possibilities = get_common(inp_vect[inp_ix], &line, is_last_inp);
+            new_lines.push(possibilities);
+        }
+
+        all_lines = new_lines;
+    }
+
+
+    return vec![];
+}
+
+
+/*
+#[test]
+fn solve_3_and_6_of_10() {
+
+    let inp_line = [Block::Unknown, Block::Unknown, Block::Unknown, Block::Unknown, Block::Unknown, Block::Unknown, Block::Unknown, Block::Unknown, Block::Unknown, Block::Unknown];
+    let ret = solve_line(&[3,6], &inp_line);
+
+    assert_eq!(ret, [Block::Full, Block::Full, Block::Full, Block::Empty, Block::Full, Block::Full, Block::Full, Block::Full, Block::Full, Block::Full]);
+}*/
 
 
 
