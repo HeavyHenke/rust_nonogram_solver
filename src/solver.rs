@@ -19,23 +19,22 @@ pub fn get_common(inp:usize, inp_line: &[Block], fill_to_end:bool) -> Vec<Block>
     for x2 in 0..len {
         if inp_line[x2] == Block::Full {
             stop = x2+1;
-            println!("Stop: {:?}", stop);
+            // println!("Stop: {:?}", stop);
         }
 
         if start == 0 && x2 + inp < len && inp_line[x2+inp] == Block::Full {
             start = x2;
-            println!("Start: {:?}", start);
+            // println!("Start: {:?}", start);
         }
     }
 
     for x in start..stop {
 
-        if x + inp > len || x > stop {
+        if x + inp > len {
             break;
         }
 
-        println!("Verifying: {:?}", x);
-
+        // println!("Verifying: {:?}", x);
 
         let mut line: Vec<Block> = vec![];
         let mut can_start = true;
@@ -71,19 +70,17 @@ pub fn get_common(inp:usize, inp_line: &[Block], fill_to_end:bool) -> Vec<Block>
             continue;
         }
 
-
-        let mut x2 = x;
-        while x2 < x + inp {
+        for x2 in x..x+inp {
 
             if inp_line[x2] == Block::Empty {
+                line.clear();
                 break;
             }
 
             line[x2] = Block::Full;
-            x2 += 1;
         }
 
-        if x2 == x + inp {
+        if line.len() == len {
             all_lines.push(line);
         }
     }
